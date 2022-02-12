@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+require 'sleeping_kangaroo12/build'
+
+platform = ::SleepingKangaroo12::Build::Platform.instance
+out_dir = "#{platform.arch}-#{platform.os}"
+lib_name = ::File.join(out_dir, platform.map_library_name('testo'))
+
+puts 'test', lib_name, out_dir, ::SleepingKangaroo12::Build::Platform.instance
