@@ -61,6 +61,20 @@ And then execute:
 
     $ bundle install
 
+## Related to containers
+
+OK, now, we have another issue since we detect CPU features on installation.
+
+What if we want to build the container image, says Docker image, locally but deploy on a server.  
+Chances are our workstation is using more recent CPU than the server.
+
+I would recommend recompilation on container starts, simply do:
+~~~
+bundle exec gem pristine sleeping_kangaroo12
+~~~
+before the command, you actually want to run.  
+This will trigger the recompilation of SleepingKangaroo12.
+
 ## Usage Examples
 
 Test vectors stolen
