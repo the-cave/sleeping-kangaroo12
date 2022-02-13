@@ -3,7 +3,7 @@
 require 'fileutils'
 require 'posix-spawn'
 require 'set'
-require 'sleeping_kangaroo12/build'
+require_relative '../lib/sleeping_kangaroo12/build'
 
 platform = ::SleepingKangaroo12::Build::Platform.instance
 out_dir = "#{platform.arch}-#{platform.os}"
