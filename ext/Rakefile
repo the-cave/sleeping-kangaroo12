@@ -1,9 +1,73 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'posix-spawn'
+require 'set'
 require 'sleeping_kangaroo12/build'
 
 platform = ::SleepingKangaroo12::Build::Platform.instance
 out_dir = "#{platform.arch}-#{platform.os}"
-lib_name = ::File.join(out_dir, platform.map_library_name('testo'))
+lib_name = ::File.join(out_dir, platform.map_library_name('SleepingKangaroo12'))
 
-puts 'test', lib_name, out_dir, ::SleepingKangaroo12::Build::Platform.instance
+feature_set = ::POSIX::Spawn::Child.new('gcc -march=native -dM -E - < /dev/null').then(&:out).then do |output|
+  output.lines.select do |line|
+    line.include?('AVX') || line.include?('SSE') || line.include?('64')
+  end
+end.each_with_object(::Set.new) do |line, accumulator|
+  matched = /(\S+)\s+1\s*\z/.match(line)
+  next unless matched
+  accumulator << matched[1]
+end
+
+static_target = if feature_set.include?('__AVX512F__') && feature_set.include?('__AVX512VL__')
+  'libK12-avx512.a'
+elsif feature_set.include?('__AVX2__') && feature_set.include?('__SSSE3__')
+  'libK12-avx2-ssse3.a'
+elsif feature_set.include?('__AVX2__')
+  'libK12-avx2.a'
+elsif feature_set.include?('__LP64__') && feature_set.include?('__SSSE3__')
+  'libK12-ssse3-64.a'
+elsif feature_set.include?('__LP64__')
+  'libK12-generic-64.a'
+elsif feature_set.include?('__SSSE3__')
+  'libK12-ssse3.a'
+else
+  'libK12-generic.a'
+end
+
+xkcp_static_target = "xkcp/bin/#{static_target}"
+
+task default: [lib_name]
+
+file lib_name => FileList['bin/.build/sleeping_kangaroo12.o', xkcp_static_target] do |t|
+  ::FileUtils.mkdir_p(::File.dirname(t.name))
+  static_lib = t.prerequisites.last
+  static_lib_dir = ::File.dirname(static_lib)
+  static_lib_file = ::File.basename(static_lib)
+  sh "gcc -shared -o #{t.name} #{t.prerequisites.first} -L#{static_lib_dir} -l:#{static_lib_file} -lm -lc"
+end
+
+file 'bin/.build/sleeping_kangaroo12.o' => FileList['binding/sleeping_kangaroo12.c', xkcp_static_target] do |t|
+  sh "gcc -Wall -Wa,-adhln -O3 -march=native -I./xkcp/bin -c #{t.prerequisites.first} -o #{t.name}"
+end
+
+file xkcp_static_target => FileList['bin/.build/Makefile'] do |t|
+  file_name = ::File.basename(t.name)
+  sh "cd xkcp && make -f ../#{t.prerequisites.first} #{file_name}"
+end
+
+desc 'Generate XKCP\'s Makefile'
+file 'bin/.build/Makefile' => FileList['bin/.build/Makefile.expanded'] do |t|
+  ::FileUtils.mkdir_p(::File.dirname(t.name))
+  sh "cd xkcp && xsltproc --xinclude -o ../#{t.name} support/Build/ToGlobalMakefile.xsl ../#{t.prerequisites.last}"
+  # rewrite Makefile path
+  original_make = ::File.read(t.name)
+  modified_make = original_make.gsub(%r{(\s+)(bin/.build/Makefile)}, '\1../\2')
+  ::File.write(t.name, modified_make, mode: 'wb')
+end
+
+desc 'Expand XKCP\'s Makefile'
+file 'bin/.build/Makefile.expanded' => FileList['config/xkcp.build'] do |t|
+  ::FileUtils.mkdir_p(::File.dirname(t.name))
+  sh "cd xkcp && xsltproc --xinclude -o ../#{t.name} support/Build/ExpandProducts.xsl ../#{t.prerequisites.last}"
+end

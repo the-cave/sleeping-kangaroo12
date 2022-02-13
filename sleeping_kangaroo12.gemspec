@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   spec.add_dependency 'ffi'
+  spec.add_dependency 'posix-spawn'
   spec.add_dependency 'rake'
   spec.extensions << 'ext/Rakefile'
 
