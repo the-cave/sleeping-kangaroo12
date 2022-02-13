@@ -34,6 +34,7 @@ require_relative 'lib/sleeping_kangaroo12/version'
         path.start_with?('ext/xkcp/tests')
     end,
     'ext/Rakefile',
+    'README.md',
   ]
   spec.extensions << 'ext/Rakefile'
   spec.require_paths = ['lib']
