@@ -136,6 +136,17 @@ digest = ::SleepingKangaroo12::Digest.new(key: 'secret', output_length: 1_000_00
 # Output: "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03f"
 ~~~
 
+## About CPU Throttling
+
+At the time of this writing, if you use a lot of AVX-512, your CPU would heat up significantly; this leads to frequency throttling.
+
+If you plan to use KangarooTwelve heavily yet still have other functionalities impacted by lower CPU frequencies
+(like [Cloudflare](https://blog.cloudflare.com/on-the-dangers-of-intels-frequency-scaling/)),
+you may want to customize the build to prevent the throttling.
+
+If that is the case, please check [konsolebox/digest-kangarootwelve-ruby](https://github.com/konsolebox/digest-kangarootwelve-ruby).
+At the time of this writing, they offer customizable build; in contrast, SleepingKangaroo12 will focus on ease of use.
+
 ## License
 
 SleepingKangaroo12 is released under the [BSD 3-Clause License](LICENSE.md). :tada:
