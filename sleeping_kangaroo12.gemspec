@@ -13,7 +13,7 @@ require_relative 'lib/sleeping_kangaroo12/version'
   spec.description = 'This gem brought the hash algorithm, KangarooTwelve, to Ruby. '\
     'It uses the official library, XKCP, by the team members behind the original paper. '\
     'The implementation is highly optimized on popular hardware, including AVX512, AVX2, SSSE3 instruction sets.'
-  spec.homepage = 'https://slime.systems/'
+  spec.homepage = 'https://github.com/the-cave/sleeping-kangaroo12'
   spec.required_ruby_version = '>= 2.6.0'
 
   # spec.metadata['allowed_push_host'] = "TODO: Set to your gem server 'https://example.com'"
