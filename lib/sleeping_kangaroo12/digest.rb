@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'ffi'
+require 'objspace'
 require_relative 'binding'
 
 module SleepingKangaroo12
@@ -30,14 +33,13 @@ module SleepingKangaroo12
 
     def update(data)
       raise Finalized if @finalized
-
       data_size = data.bytesize
       data_buffer = ::FFI::MemoryPointer.new(:char, data_size)
       data_buffer.put_bytes(0, data)
       Binding.update(@native_instance, data_buffer, data_size).tap do |result|
         raise UpdatingFailed unless result.zero?
       end
-      nil
+      self
     end
 
     def <<(*args, **kwargs)

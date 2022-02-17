@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sleeping_kangaroo12 (0.0.1)
+    sleeping_kangaroo12 (0.0.2)
       ffi (~> 1.15.5)
       posix-spawn (~> 0.3.15)
       rake (~> 13.0.6)

@@ -48,7 +48,7 @@ file lib_name => FileList['bin/.build/sleeping_kangaroo12.o', xkcp_static_target
 end
 
 file 'bin/.build/sleeping_kangaroo12.o' => FileList['binding/sleeping_kangaroo12.c', xkcp_static_target] do |t|
-  sh "gcc -Wall -Wa,-adhln -O3 -march=native -I./xkcp/bin -c #{t.prerequisites.first} -o #{t.name}"
+  sh "gcc -Wall -O3 -march=native -I./xkcp/bin -c #{t.prerequisites.first} -o #{t.name}"
 end
 
 file xkcp_static_target => FileList['bin/.build/Makefile'] do |t|
