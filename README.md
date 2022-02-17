@@ -25,20 +25,14 @@ gem is sleeping. :-D
 
 ## What are specials?
 
-Many!  
-Just take a peek at the code, you'll notice that:
-
 - It builds on top of the [eXtended Keccak Code Package (XKCP)](https://github.com/XKCP/XKCP), an easy-to-use and highly
   optimized library maintained by the Keccak team themselves.
 - The binding auto-select and detects CPU features on installation, it supports `AVX512`, `AVX2`, and `SSSE3`
   instruction sets out of the box. And able to run on a machine without special instruction sets.
-- Thin and stable binding; designed by a proper software architect
+- Thin and stable binding layer
 - Not limited to [Matz's Ruby Interpreter (MRI)](https://en.wikipedia.org/wiki/Ruby_MRI), this is due to the gem opting
-  for [Ruby-FFI](https://github.com/ffi/ffi) instead of native extensions.
+  for [Ruby-FFI](https://github.com/ffi/ffi) instead of using the API exposed by `ruby.h`.
   (I only tested on MRI, though.)
-- Compared to other hash functions, this binding actually shipped with the optimized implementation. Some
-  other hash function might looks more performant on benchmarks, this may or may not translated to real-world
-  performance.
 
 ## Prerequisites
 
@@ -47,7 +41,7 @@ In order to install the gem, your machine should be ready to build the XKCP pack
 - GCC, the GNU Compiler Collection; our favorite
 - GNU make
 - xsltproc executable, normally comes with libxslt package
-- And for the sake of completeness: Ruby, Bundler, and Ruby related stuffs
+- Ruby related stuffs
 
 ## Installation
 
@@ -82,58 +76,46 @@ from [konsolebox/digest-kangarootwelve-ruby](https://github.com/konsolebox/diges
 binding.
 
 ~~~ruby
-# Shortcuts
-#
-::SleepingKangaroo12::Digest.digest('abc')
-# Output: "\xAB\x17O2\x8CU\xA5Q\v\v \x97\x91\xBF\x8B`\xE8\x01\xA7\xCF\xC2\xAAB\x04-\xCB\x8FT\x7F\xBE:}"
-#
+# basic usage
 ::SleepingKangaroo12::Digest.hexdigest('abc')
-# Output: "ab174f328c55a5510b0b209791bf8b60e801a7cfc2aa42042dcb8f547fbe3a7d"
+# => "ab174f328c55a5510b0b209791bf8b60e801a7cfc2aa42042dcb8f547fbe3a7d"
 
-# Multiple updates
-#
+# streaming
 digest = ::SleepingKangaroo12::Digest.new
-digest.update('a')
-digest.update('b')
-digest.update('c')
+digest << 'a'
+digest << 'b'
+digest << 'c'
 digest.hexdigest
-# Output: "ab174f328c55a5510b0b209791bf8b60e801a7cfc2aa42042dcb8f547fbe3a7d"
+# => "ab174f328c55a5510b0b209791bf8b60e801a7cfc2aa42042dcb8f547fbe3a7d"
+# `<<` is an alias of `update`, use the one you like
 
-# Hashing with a key, similar to HMAC
-# KangarooTwelve call the key "customization", it is the same thing, FYI
-#
+# keyed hash (AKA: customization)
 digest = ::SleepingKangaroo12::Digest.new(key: 'secret')
 digest << 'abc' # alternate form of update method
 digest.hexdigest
-# Output: "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03f"
-# HMAC requires 2 parses of hashing, the customization is definitely faster
+# => "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03f"
 
-# You can control the output length too
-#
-digest = ::SleepingKangaroo12::Digest.new(key: 'secret', output_length: 5)
-digest << 'abc'
-digest.hexdigest
-# Output: "dc1fd53f85"
-# This is marginally faster than truncating the output yourself.
-#
-digest = ::SleepingKangaroo12::Digest.new(key: 'secret', output_length: 64)
-digest << 'abc'
-digest.hexdigest
-# Output: "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03fc4b18c621b57dbb8967094b160dbf22ee42402d7e3d45ecab4b02ef0db14b105"
-# The output is longer now, but the security claim is still the same.
-# (as 256-bit output length, which translated to the security level of 128-bit)
-
-# Weird parameters
-#
-digest = ::SleepingKangaroo12::Digest.new(key: 'secret', output_length: 1_000_000_000_000)
-# This will error; I arbitrary set the limit at 1MiB - 1 bytes as a safety measure. Same for length <= 0
-# If you have a use case for something out of range, feel free to discuss.
-# You are probably looking for a stream cipher instead of a hash function, though.
-
-# The options work with shortcuts too
-# 
+# shortcuts
+::SleepingKangaroo12::Digest.digest('abc')
+# => "\xAB\x17O2\x8CU\xA5Q\v\v \x97\x91\xBF\x8B`\xE8\x01\xA7\xCF\xC2\xAAB\x04-\xCB\x8FT\x7F\xBE:}"
 ::SleepingKangaroo12::Digest.hexdigest('abc', key: 'secret')
-# Output: "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03f"
+# => "dc1fd53f85402e2b34fa92bd87593dd9c3fe6cc49d9db6c05dc0cf26c6a7e03f"
+::SleepingKangaroo12::Digest.base64digest('abc', output_length: 24)
+# => "qxdPMoxVpVELCyCXkb+LYOgBp8/CqkIE"
+# `digest`, `hexdigest`, and `base64digest` are available as shortcuts and also on `Digest` instances.
+# Same for the options, you may use `key`, `key_seed`, and `output_length` on both instance methods and shortcuts
+
+# XOF (extendable-output functions)
+digest = ::SleepingKangaroo12::Digest.new(output_length: 64)
+digest << 'abc'
+digest.hexdigest
+# => "ab174f328c55a5510b0b209791bf8b60e801a7cfc2aa42042dcb8f547fbe3a7d3f5b54d116a705d36aac2a7eac7a19e3f0f058cb3c238ac7f034178ae34f212e"
+
+# weird parameters
+::SleepingKangaroo12::Digest.new(key: 'secret', output_length: 1_000_000_000_000)
+# error: Hash length out of range (ArgumentError)
+# I arbitrary set the limit of output length at 1MiB - 1 bytes as a safety measure. Same for length <= 0
+# If you have a use case for something out of range, feel free to discuss.
 ~~~
 
 ## About CPU Throttling
