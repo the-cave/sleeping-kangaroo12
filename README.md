@@ -1,5 +1,8 @@
 # SleepingKangaroo12
 
+[![GitHub version](https://badge.fury.io/gh/the-cave%2Fsleeping-kangaroo12.svg)](https://badge.fury.io/gh/the-cave%2Fsleeping-kangaroo12)
+[![Gem Version](https://badge.fury.io/rb/sleeping_kangaroo12.svg)](https://badge.fury.io/rb/sleeping_kangaroo12)
+
 ## What is it?
 
 SleepingKangaroo12 is a Ruby binding of [KangarooTwelve](https://keccak.team/kangarootwelve.html), a fast cryptographic
