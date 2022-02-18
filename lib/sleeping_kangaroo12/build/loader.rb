@@ -5,6 +5,7 @@ require 'pathname'
 require_relative 'platform'
 
 module SleepingKangaroo12
+  # @!visibility private
   module Build
     # taken from:
     # https://github.com/ffi/ffi-compiler/blob/master/lib/ffi-compiler/loader.rb

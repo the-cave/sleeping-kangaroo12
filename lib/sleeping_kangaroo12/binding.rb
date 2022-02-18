@@ -3,6 +3,7 @@
 require_relative 'build/loader'
 
 module SleepingKangaroo12
+  # @!visibility private
   module Binding
     extend ::FFI::Library
     ffi_lib Build::Loader.find('SleepingKangaroo12')

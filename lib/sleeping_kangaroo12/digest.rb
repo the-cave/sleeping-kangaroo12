@@ -6,6 +6,13 @@ require 'objspace'
 require_relative 'binding'
 
 module SleepingKangaroo12
+  # @example basic usage
+  #   digest = ::SleepingKangaroo12::Digest.new(output_length: 10)
+  #   digest << 'some input'
+  #   digest << 'some more input'
+  #   digest.hexdigest
+  #   #=> "cbea8144fbbf6150ceaf"
+  # See {file:README.md README} for more examples
   class Digest
     class UpdatingFailed < ::StandardError
     end
@@ -16,6 +23,7 @@ module SleepingKangaroo12
     class Finalized < ::StandardError
     end
 
+    # Create a new Digest
     def initialize(output_length: 32, key: nil)
       raise ::TypeError, 'Hash length is not an Integer' unless output_length.is_a?(::Integer)
       raise ::ArgumentError, 'Hash length out of range' unless (1...(1 << 20)).include?(output_length)
@@ -31,6 +39,7 @@ module SleepingKangaroo12
       @result = nil
     end
 
+    # Feed in the data
     def update(data)
       raise Finalized if @finalized
       data_size = data.bytesize
@@ -42,10 +51,12 @@ module SleepingKangaroo12
       self
     end
 
+    # Alias for {#update}
     def <<(*args, **kwargs)
       update(*args, **kwargs)
     end
 
+    # Finalize and output a binary hash
     def digest
       @finalized = true
       return @_digest if @_digest
@@ -65,30 +76,45 @@ module SleepingKangaroo12
       @_digest = data_buffer.get_bytes(0, @output_length)
     end
 
+    # Finalize and output a hexadecimal-encoded hash
     def hexdigest
       @_hexdigest ||= digest.unpack1('H*')
     end
 
+    # Finalize and output a Base64-encoded hash
     def base64digest
       @_base64digest ||= ::Base64.strict_encode64(digest)
     end
 
     class << self
+      # @!visibility private
       # https://www.mikeperham.com/2010/02/24/the-trouble-with-ruby-finalizers/
       def _create_finalizer(instance)
-        proc {
+        proc do
           Binding.destroy(instance)
-        }
+        end
       end
 
+      # Shortcut to calculate a raw digest
+      # @example basic usage
+      #   ::SleepingKangaroo12::Digest.digest('some input')
+      #   #=> "m\x9FJ\xDA\xE9\x96\xD1X\xC5K\xE83e(x\x8C\xD3o\xFBh\xB2\x17W ,\xD5\xED!\xE4D\xAF\xDD"
+      # @example with key (AKA: customization)
+      #   ::SleepingKangaroo12::Digest.digest('some input', key: 'secret')
+      #   #=> "\x96\xE2K\xC4\xCF\xFFGF\xE1\x05\xB9\xF6f\xF0-\xF8\x1F\a\n\xFC\xD7\xC9\x91\n\xFC\xFB\xA6hOx\x99<"
+      # @example controlled output length
+      #   ::SleepingKangaroo12::Digest.digest('some input', output_length: 5)
+      #   #=> "m\x9FJ\xDA\xE9"
       def digest(*args, **kwargs)
         _generic_digest(*args, **kwargs, &:digest)
       end
 
+      # Same as {.digest} but encode the output in hexadecimal format
       def hexdigest(*args, **kwargs)
         _generic_digest(*args, **kwargs, &:hexdigest)
       end
 
+      # Same as {.digest} but encode the output in Base64 format
       def base64digest(*args, **kwargs)
         _generic_digest(*args, **kwargs, &:base64digest)
       end
