@@ -5,19 +5,21 @@ require_relative 'lib/sleeping_kangaroo12/version'
 ::Gem::Specification.new do |spec|
   spec.name = 'sleeping_kangaroo12'
   spec.version = SleepingKangaroo12::VERSION
+  spec.license = 'BSD-3-Clause'
   spec.author = 'Sarun Rattanasiri'
   spec.email = 'midnight_w@gmx.tw'
-  spec.license = 'BSD-3-Clause'
 
-  spec.summary = 'A binding of the KangarooTwelve hash algorithm for Ruby'
-  spec.description = 'This gem brought the hash algorithm, KangarooTwelve, to Ruby. '\
-    'It uses the official library, K12, maintained by the Keccak team themselves. '\
-    'The implementation is highly optimized on popular hardware, including AVX512, AVX2, SSSE3 instruction sets.'
+  spec.summary = 'KangarooTwelve, the hash algorithm, native binding for Ruby'
+  spec.description = "KangarooTwelve binding for Ruby\n"\
+    "The gem build on top of the official library, K12, maintained by the Keccak team themselves.\n"\
+    'The implementation is highly optimized and supporting AVX512, AVX2, SSSE3 instruction sets.'
   spec.homepage = 'https://github.com/the-cave/sleeping-kangaroo12'
   spec.required_ruby_version = '>= 2.6.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = "https://github.com/the-cave/sleeping-kangaroo12/tree/v#{spec.version}"
+  spec.metadata['source_code_uri'] = "#{spec.homepage}/tree/v#{spec.version}"
+  spec.metadata['documentation_uri'] = "https://rubydoc.info/gems/#{spec.name}/#{spec.version}"
+  spec.metadata['bug_tracker_uri'] = "#{spec.homepage}/issues"
 
   spec.files = [
     *::Dir['lib/**/*'],
