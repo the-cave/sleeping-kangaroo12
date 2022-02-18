@@ -12,7 +12,7 @@ module SleepingKangaroo12
   #   digest << 'some more input'
   #   digest.hexdigest
   #   #=> "cbea8144fbbf6150ceaf"
-  # See {file:README.md README} for more examples
+  # See {file:README.md README} for more usage examples
   class Digest
     module Error
     end
