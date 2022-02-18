@@ -1,3 +1,3 @@
-[submodule "ext/xkcp"]
-	path = ext/xkcp
-	url = https://github.com/XKCP/XKCP.git
+[submodule "ext/k12"]
+	path = ext/k12
+	url = https://github.com/XKCP/K12.git
