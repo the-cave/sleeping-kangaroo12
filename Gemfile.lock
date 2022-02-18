@@ -2,9 +2,9 @@ PATH
   remote: .
   specs:
     sleeping_kangaroo12 (0.0.4)
-      ffi (~> 1.15.5)
-      posix-spawn (~> 0.3.15)
-      rake (~> 13.0.6)
+      ffi (~> 1.15.0)
+      posix-spawn (~> 0.3.0)
+      rake (~> 13.0.0)
 
 GEM
   remote: https://rubygems.org/

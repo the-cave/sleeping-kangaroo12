@@ -37,7 +37,7 @@ require_relative 'lib/sleeping_kangaroo12/version'
   spec.extensions << 'ext/Rakefile'
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'ffi', '~> 1.15.5'
-  spec.add_dependency 'posix-spawn', '~> 0.3.15'
-  spec.add_dependency 'rake', '~> 13.0.6'
+  spec.add_dependency 'ffi', '~> 1.15.0'
+  spec.add_dependency 'posix-spawn', '~> 0.3.0'
+  spec.add_dependency 'rake', '~> 13.0.0'
 end
