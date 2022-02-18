@@ -14,13 +14,19 @@ module SleepingKangaroo12
   #   #=> "cbea8144fbbf6150ceaf"
   # See {file:README.md README} for more examples
   class Digest
+    module Error
+    end
+
     class UpdatingFailed < ::StandardError
+      include Error
     end
 
     class FinalizationFailed < ::StandardError
+      include Error
     end
 
     class Finalized < ::StandardError
+      include Error
     end
 
     # Create a new Digest
