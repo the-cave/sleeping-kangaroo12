@@ -11,7 +11,7 @@ require_relative 'lib/sleeping_kangaroo12/version'
 
   spec.summary = 'A binding of the KangarooTwelve hash algorithm for Ruby'
   spec.description = 'This gem brought the hash algorithm, KangarooTwelve, to Ruby. '\
-    'It uses the official library, XKCP, by the team members behind the original paper. '\
+    'It uses the official library, K12, maintained by the Keccak team themselves. '\
     'The implementation is highly optimized on popular hardware, including AVX512, AVX2, SSSE3 instruction sets.'
   spec.homepage = 'https://github.com/the-cave/sleeping-kangaroo12'
   spec.required_ruby_version = '>= 2.6.0'
@@ -22,12 +22,11 @@ require_relative 'lib/sleeping_kangaroo12/version'
   spec.files = [
     *::Dir['lib/**/*'],
     *::Dir['ext/binding/**/*'],
-    *::Dir['ext/config/**/*'],
-    *::Dir['ext/xkcp/**/*'].reject do |path|
-      path.start_with?('ext/xkcp/bin') ||
-        path.start_with?('ext/xkcp/doc') ||
-        path.start_with?('ext/xkcp/Standalone') ||
-        path.start_with?('ext/xkcp/tests')
+    *::Dir['ext/k12/**/*'].reject do |path|
+      path.start_with?('ext/k12/bin') ||
+        path.start_with?('ext/k12/tests') ||
+        path.start_with?('ext/k12/.git') ||
+        path.start_with?('ext/k12/.travis')
     end,
     'ext/Rakefile',
     'README.md',

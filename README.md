@@ -25,10 +25,9 @@ gem is sleeping. :-D
 
 ## What are specials?
 
-- It builds on top of the [eXtended Keccak Code Package (XKCP)](https://github.com/XKCP/XKCP), an easy-to-use and highly
+- It builds on top of the [K12](https://github.com/XKCP/K12), an easy-to-use and highly
   optimized library maintained by the Keccak team themselves.
-- The binding auto-select and detects CPU features on installation, it supports `AVX512`, `AVX2`, and `SSSE3`
-  instruction sets out of the box. And able to run on a machine without special instruction sets.
+- The instruction set `AVX512`, `AVX2`, and `SSSE3` will be detected at runtime to select the optimization dynamically.
 - Thin and stable binding layer
 - Not limited to [Matz's Ruby Interpreter (MRI)](https://en.wikipedia.org/wiki/Ruby_MRI), this is due to the gem opting
   for [Ruby-FFI](https://github.com/ffi/ffi) instead of using the API exposed by `ruby.h`.
@@ -36,7 +35,7 @@ gem is sleeping. :-D
 
 ## Prerequisites
 
-In order to install the gem, your machine should be ready to build the XKCP package. Which mean you should prepare:
+In order to install the gem, your machine should be ready to build the K12 package. Which mean you should prepare:
 
 - GCC, the GNU Compiler Collection; our favorite
 - GNU make
@@ -54,20 +53,6 @@ gem 'sleeping_kangaroo12'
 And then execute:
 
     $ bundle install
-
-## Related to containers
-
-OK, now, we have another issue since we detect CPU features on installation.
-
-What if we want to build the container image, says Docker image, locally but deploy on a server.  
-Chances are our workstation is using more recent CPU than the server.
-
-I would recommend recompilation on container starts, simply do:
-~~~
-bundle exec gem pristine sleeping_kangaroo12
-~~~
-before the command, you actually want to run.  
-This will trigger the recompilation of SleepingKangaroo12.
 
 ## Usage Examples
 

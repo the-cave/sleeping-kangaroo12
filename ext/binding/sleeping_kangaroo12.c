@@ -1,20 +1,5 @@
-#if defined(__AVX512F__) && defined(__AVX512VL__)
-  #include "libK12-avx512.a.headers/KangarooTwelve.h"
-#elif defined(__AVX2__) && defined(__SSSE3__)
-  #include "libK12-avx2-ssse3.a.headers/KangarooTwelve.h"
-#elif defined(__AVX2__)
-  #include "libK12-avx2.a.headers/KangarooTwelve.h"
-#elif defined(__LP64__) && defined(__SSSE3__)
-  #include "libK12-ssse3-64.a.headers/KangarooTwelve.h"
-#elif defined(__LP64__)
-  #include "libK12-generic-64.a.headers/KangarooTwelve.h"
-#elif defined(__SSSE3__)
-  #include "libK12-ssse3.a.headers/KangarooTwelve.h"
-#else
-  #include "libK12-generic.a.headers/KangarooTwelve.h"
-#endif
-
 #include <stdlib.h>
+#include "libk12.a.headers/KangarooTwelve.h"
 
 void * SleepingKangaroo12_Init(int outputLength) {
   KangarooTwelve_Instance *retVal = malloc(sizeof (KangarooTwelve_Instance)); // TODO: check result
