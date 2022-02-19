@@ -4,11 +4,9 @@ require 'ffi'
 require 'singleton'
 
 module SleepingKangaroo12
-  # @!visibility private
   module Build
     # mostly taken from:
     # https://github.com/ffi/ffi-compiler/blob/master/lib/ffi-compiler/platform.rb
-
     class Platform
       include ::Singleton
 

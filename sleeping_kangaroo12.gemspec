@@ -33,6 +33,7 @@ require_relative 'lib/sleeping_kangaroo12/version'
     'ext/Rakefile',
     'README.md',
     'LICENSE.md',
+    '.yardopts',
   ]
   spec.extensions << 'ext/Rakefile'
   spec.require_paths = ['lib']
