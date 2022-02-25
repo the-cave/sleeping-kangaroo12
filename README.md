@@ -45,6 +45,12 @@ In order to install the gem, your machine should be ready to build the K12 packa
 - xsltproc executable, normally comes with libxslt package
 - Ruby related stuffs
 
+### TL;DR for Ubuntu-liked OS
+
+~~~bash
+sudo apt install build-essential xsltproc
+~~~
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -53,7 +59,7 @@ Add this line to your application's Gemfile:
 gem 'sleeping_kangaroo12'
 ~~~
 
-And then execute:
+Check the [prerequisites](#prerequisites); and then execute:
 
     $ bundle install
 
